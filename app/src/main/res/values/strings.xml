@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">iReader QR</string>
+    <string name="abre_archivo">Abrir imagen de QR</string>
+</resources>
