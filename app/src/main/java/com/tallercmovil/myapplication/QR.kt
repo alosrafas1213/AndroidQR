@@ -12,12 +12,20 @@ import android.util.Log
 import android.webkit.URLUtil
 import android.widget.Toast
 import android.content.ClipboardManager
+import android.graphics.BitmapFactory
 import android.os.Environment
 import android.os.Environment.getExternalStorageDirectory
+import android.provider.MediaStore
+import android.util.Base64
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.google.zxing.BinaryBitmap
+import com.google.zxing.MultiFormatReader
+import com.google.zxing.RGBLuminanceSource
 import com.google.zxing.Result
+import com.google.zxing.common.HybridBinarizer
 import me.dm7.barcodescanner.zxing.ZXingScannerView
 import java.io.File
 import java.io.FileOutputStream
@@ -106,10 +114,10 @@ class QR : AppCompatActivity(), ZXingScannerView.ResultHandler {
             else if (cabecera[0]=="BEGIN:VCARD"){
                 Log.d("Mensaje","El texto pertenece a una VCARD")
 
-                val outputDir: File = Environment.getExternalStorageDirectory() // context being the Activity pointer
+                val outputDir: File = this.getExternalFilesDir(null)!! // context being the Activity pointer
                 //val outputDir: File = File("file///")
                 val outputFile = File.createTempFile("archivo", ".vcf", outputDir)
-                var archivo=outputFile.getPath()
+                var archivo=outputFile.absolutePath
                 Log.d("Ubicacion archivo",archivo)
                 //val fileOutputStream: FileOutputStream = openFileOutput("archivo.vcf", Context.MODE_PRIVATE)
                 val fileOutputStream: FileOutputStream = FileOutputStream(outputFile)
@@ -122,7 +130,8 @@ class QR : AppCompatActivity(), ZXingScannerView.ResultHandler {
 
                 //i.setDataAndType(Uri.fromFile(outputFile),"text/x-vcard");
                 i.setDataAndType(Uri.parse(archivo),"text/vcard");
-                //i.setDataAndType(Uri.parse("data:text/x-vcard;base64," + Base64.encodeToString(scanResult.toByteArray(),Base64.DEFAULT)),"text/x-vcard")
+                //i.setDataAndType(Uri.parse("data:text/x-vcard;base64," + Base64.encodeToString(theStringContainingYourVcard.getBytes()),"text/x-vcard");
+                //i.setDataAndType(Uri.parse(Base64.encodeToString(scanResult.toByteArray(), Base64.DEFAULT)),"text/vcard")
                 startActivity(i);
                 finish()
             }
@@ -164,7 +173,7 @@ class QR : AppCompatActivity(), ZXingScannerView.ResultHandler {
 
                 AlertDialog.Builder(this)
                     .setTitle("Mensaje")
-                    .setMessage("Texto: ${scanResult}")
+                    .setMessage("Texto: $scanResult")
                     .setPositiveButton("Aceptar", DialogInterface.OnClickListener { dialog, which ->
                         dialog.dismiss()
                         finish()
@@ -187,6 +196,7 @@ class QR : AppCompatActivity(), ZXingScannerView.ResultHandler {
         }
 
     }
+
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -220,6 +230,7 @@ class QR : AppCompatActivity(), ZXingScannerView.ResultHandler {
         }
 
     }
+
 
     override fun onResume() {
         super.onResume()
