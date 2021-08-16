@@ -15,10 +15,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
     }
 
-    fun clickBoton(view: View){
-        startActivity(Intent(this, QRArchivo::class.java))
-    }
-
     fun clickCamara(view: View) {
         startActivity(Intent(this, QR::class.java))
     }

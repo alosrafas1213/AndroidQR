@@ -114,7 +114,7 @@ class QR : AppCompatActivity(), ZXingScannerView.ResultHandler {
             else if (cabecera[0]=="BEGIN:VCARD"){
                 Log.d("Mensaje","El texto pertenece a una VCARD")
 
-                val outputDir: File = this.getExternalFilesDir(null)!! // context being the Activity pointer
+                val outputDir: File = File("/storage/emulated/0/Download") // context being the Activity pointer
                 //val outputDir: File = File("file///")
                 val outputFile = File.createTempFile("archivo", ".vcf", outputDir)
                 var archivo=outputFile.absolutePath
@@ -128,8 +128,8 @@ class QR : AppCompatActivity(), ZXingScannerView.ResultHandler {
                 val i = Intent(Intent.ACTION_VIEW)
                 i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
 
-                //i.setDataAndType(Uri.fromFile(outputFile),"text/x-vcard");
-                i.setDataAndType(Uri.parse(archivo),"text/vcard");
+                i.setDataAndType(Uri.fromFile(File(archivo)),"text/x-vcard");
+                //i.setDataAndType(Uri.parse(archivo),"text/vcard");
                 //i.setDataAndType(Uri.parse("data:text/x-vcard;base64," + Base64.encodeToString(theStringContainingYourVcard.getBytes()),"text/x-vcard");
                 //i.setDataAndType(Uri.parse(Base64.encodeToString(scanResult.toByteArray(), Base64.DEFAULT)),"text/vcard")
                 startActivity(i);
